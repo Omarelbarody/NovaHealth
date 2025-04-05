@@ -1,104 +1,160 @@
+import 'package:NovaHealth/core/utils/size_config.dart';
 import 'package:NovaHealth/core/widgets/space_widget.dart';
+import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
-class HomeViewBody  extends StatelessWidget {
-  const HomeViewBody ({super.key});
+class HomeViewBody extends StatefulWidget {
+  const HomeViewBody({super.key});
+
+  @override
+  _HomeViewBodyState createState() => _HomeViewBodyState();
+}
+
+class _HomeViewBodyState extends State<HomeViewBody> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _pages = <Widget>[
+    HomeContent(),
+    Center(child: Text('Activities Page')),
+    Center(child: Text('Profile Page')),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: SingleChildScrollView(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.event),
+            label: 'Activities',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
       reverse: true,
       child: Padding(
         padding: EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          //******************************************Logo************************************************** */
           children: [
-              VerticallSpace(5),
-              Row(
-                children: [
-                  HorizintalSpace(1),
-                  SizedBox(
-                    child: Image.asset('assets/images/logo.png'),
-                  )
-                ],
-              ),
-              VerticallSpace(2),
-              //***************************************How can we help?************************************************8 */
-              Row(
-                children: [
-                  HorizintalSpace(3),
-                  const Text('How can we help?',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      )),
-                ],
-              ),
-              //VerticallSpace(1),
-              //*****************************************consultaion Button********************************************* */
-              Row(
-                children: [
-                  HorizintalSpace(1),
-                  InkWell(
-                    onTap: () {},
-                    child: Ink.image(
-                    image:AssetImage('assets/images/consultaion.png'),
-                      height: 107,
-                      width: 120.33,
-                      fit: BoxFit.cover,
-                    ),
+            VerticallSpace(5),
+            //************************************************logo*************************************************** */
+            Row(
+              children: [
+                HorizintalSpace(1),
+                SizedBox(
+                  child: Image.asset('assets/images/logo.png'),
+                )
+              ],
+            ),
+            VerticallSpace(2),
+            //*******************************************How can we help?***************************************** */
+            Row(
+              children: [
+                HorizintalSpace(3),
+                const Text('How can we help?',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
+              ],
+            ),
+            Row(
+              children: [
+                HorizintalSpace(1),
+                //*********************************************consultaion *********************************************/
+                InkWell(
+                  onTap: () {
+                      Get.to(() => DepartmentView(),
+                          transition: Transition.rightToLeft,
+                          duration: Duration(milliseconds: 150));
+                    },
+                  child: Ink.image(
+                    image: AssetImage('assets/images/consultaion.png'),
+                    height: 107,
+                    width: 120.33,
+                    fit: BoxFit.cover,
                   ),
-              //*****************************************Laboratory Button********************************************* */
-                  
-                  InkWell(
-                    onTap: () {},
-                    child: Ink.image(
-                      image:AssetImage('assets/images/Laboratory.png'),
-                      height: 107,
-                      width: 120.33,
-                      fit: BoxFit.cover,
-                    ),
+                ),
+                //*********************************************Laboratory *********************************************/
+                InkWell(
+                  onTap: () {},
+                  child: Ink.image(
+                    image: AssetImage('assets/images/Laboratory.png'),
+                    height: 107,
+                    width: 120.33,
+                    fit: BoxFit.cover,
                   ),
-              //*****************************************Radiology Button**************************************** */
-                    
-                  InkWell(
-                    onTap: () {},
-                    child: Ink.image(
-                      image:AssetImage('assets/images/Radiology.png'),
-                      height: 107,
-                      width: 120.33,
-                      fit: BoxFit.cover,
-                    ),
+                ),
+                //*******************************************Radiology*********************************************** */
+                InkWell(
+                  onTap: () {},
+                  child: Ink.image(
+                    image: AssetImage('assets/images/Radiology.png'),
+                    height: 107,
+                    width: 120.33,
+                    fit: BoxFit.cover,
                   ),
-              ],),
-              VerticallSpace(1),
-              //*****************************************Don't Feel right?**************************************** */
-                Row(
-                children: [
-                  HorizintalSpace(2),
-                  const Text('Don’t feel right?',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      )),
-                ],
-              ),
+                ),
+              ],
+            ),
+            VerticallSpace(1),
+                //*******************************************Don’t feel right?****************************************** */
+            Row(
+              children: [
+                HorizintalSpace(2),
+                const Text('Don’t feel right?',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
+              ],
+            ),
+                //*******************************************NovaAi****************************************** */
 
-              //*****************************************NovaAi Button**************************************** */
-            Row(children: [
-              //HorizintalSpace(1),
-              InkWell(
+            Row(
+              children: [
+                InkWell(
                   onTap: () {},
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8), // Optional for rounded edges
+                    borderRadius:
+                        BorderRadius.circular(8), // Optional for rounded edges
                     child: Stack(
-                      alignment: Alignment.centerRight, // Aligns the overlay image to the right
+                      alignment: Alignment.centerRight,
                       children: [
                         Ink.image(
                           image: AssetImage('assets/images/NovaAi.png'),
@@ -107,12 +163,12 @@ class HomeViewBody  extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                         Align(
-                          alignment: Alignment.centerRight, // Moves 'o3.png' to the right inside the button
+                          alignment: Alignment.centerRight,
                           child: Padding(
-                            padding: EdgeInsets.only(right: 20), // Adjust right padding as needed
+                            padding: EdgeInsets.only(right: 20),
                             child: Image.asset(
                               'assets/images/o3.png',
-                              width: 50, // Adjust size as needed
+                              width: 50,
                               height: 100,
                             ),
                           ),
@@ -121,24 +177,27 @@ class HomeViewBody  extends StatelessWidget {
                     ),
                   ),
                 )
-
-                
-              
-
-              ],)
-
-
-
+              ],
+            ),
+            VerticallSpace(31),
+            //****************************************Ai bot******************************************************* */
+            Row(
+              children: [
+                HorizintalSpace(30),
+                InkWell(
+                  onTap: () {},
+                  child: Ink.image(
+                    image: AssetImage('assets/images/Ai bot.png'),
+                    height: 82,
+                    width: 92,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
-
       ),
-
-
-
-
-
-    ),
     );
   }
 }
