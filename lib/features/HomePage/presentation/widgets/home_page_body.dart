@@ -1,5 +1,6 @@
 import 'package:NovaHealth/core/utils/size_config.dart';
 import 'package:NovaHealth/core/widgets/space_widget.dart';
+import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -179,7 +180,123 @@ class HomeContent extends StatelessWidget {
                 )
               ],
             ),
-            VerticallSpace(31),
+            //****************************************Upcoming Appointments***************************************** */
+            VerticallSpace(1),
+                    Row(
+              children: [
+                HorizintalSpace(2),
+                const Text('Upcoming Appointments',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
+              ],
+            ),
+              VerticallSpace(1),
+          //****************************************Appointment1 Image***************************************** */
+              SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              HorizintalSpace(2),
+              InkWell(
+                onTap: () {},
+                child: Ink.image(
+                  image: AssetImage('assets/images/Appointment1.png'),
+                  height: 132,
+                  width: 218,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              HorizintalSpace(2),
+          InkWell(
+                onTap: () {},
+                child: Ink.image(
+                  image: AssetImage('assets/images/Appointment1.png'),
+                  height: 132,
+                  width: 218,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              HorizintalSpace(2),  
+            ],
+          ),
+        ),
+          VerticallSpace(1),
+            //****************************************Medical News******************************************************* */
+            
+                    Row(
+              children: [
+                HorizintalSpace(2),
+                const Text('Medical News',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    )),
+                    HorizintalSpace(11),
+            //****************************************See All******************************************************* */
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => SignUpView(),///////////////////عدل هناااااااا 
+                          transition: Transition.rightToLeft,
+                          duration: Duration(milliseconds: 150));
+                    },
+                    child: Text(
+                      'See All',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromARGB(255, 45, 132, 251),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            VerticallSpace(1),
+              SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              //HorizintalSpace(2),
+              InkWell(
+                onTap: () {},
+                child: Ink.image(
+                  image: AssetImage('assets/images/news1.png'),
+                  height: 123,
+                  width: 359,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              //HorizintalSpace(1),
+              InkWell(
+                onTap: () {},
+                child: Ink.image(
+                  image: AssetImage('assets/images/news1.png'),
+                  height: 123,
+                  width: 359,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              //HorizintalSpace(1),
+              InkWell(
+                onTap: () {},
+                child: Ink.image(
+                  image: AssetImage('assets/images/news1.png'),
+                height: 123,
+                width: 359,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              //HorizintalSpace(1),  
+            ],
+          ),
+        ),
+          //  VerticallSpace(12),
             //****************************************Ai bot******************************************************* */
             Row(
               children: [
