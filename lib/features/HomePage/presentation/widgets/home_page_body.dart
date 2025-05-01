@@ -299,7 +299,11 @@ class HomeContent extends StatelessWidget {
               child: Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                    Get.to(() => MedicalView(),
+                        transition: Transition.rightToLeft,
+                        duration: const Duration(milliseconds: 150));
+                  },
                     child: Ink.image(
                       image: const AssetImage('assets/images/news1.png'),
                       height: 123,
@@ -308,7 +312,11 @@ class HomeContent extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                      onTap: () {
+                    Get.to(() => MedicalView(),
+                        transition: Transition.rightToLeft,
+                        duration: const Duration(milliseconds: 150));
+                  },
                     child: Ink.image(
                       image: const AssetImage('assets/images/news1.png'),
                       height: 123,
@@ -317,7 +325,11 @@ class HomeContent extends StatelessWidget {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                      onTap: () {
+                    Get.to(() => MedicalView(),
+                        transition: Transition.rightToLeft,
+                        duration: const Duration(milliseconds: 150));
+                  },
                     child: Ink.image(
                       image: const AssetImage('assets/images/news1.png'),
                       height: 123,

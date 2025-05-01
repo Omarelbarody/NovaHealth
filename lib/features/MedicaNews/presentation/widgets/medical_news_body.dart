@@ -157,7 +157,7 @@ class MedicalContent extends StatelessWidget {
             Image.asset('assets/images/Healthing living 2.png'),
             Image.asset('assets/images/Covid19.png'),
             Image.asset('assets/images/comon diseases.png'),
-            Image.asset('assets/images/Medical news.png'),
+            //Image.asset('assets/images/Medical news.png'),
           ],
         ),
       ),
