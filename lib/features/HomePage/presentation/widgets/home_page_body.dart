@@ -2,6 +2,7 @@ import 'package:NovaHealth/core/utils/size_config.dart';
 import 'package:NovaHealth/core/widgets/space_widget.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
+import 'package:NovaHealth/features/MedicaNews/presentation/widgets/medical_news_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
@@ -58,9 +59,10 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       ),
   ],
 ),
-            //************************************************Home&Activities&Profile bar************************************************ */
+            //*****************************************Home&Activities&Profile bar************************************** */
 
       bottomNavigationBar: BottomNavigationBar(
+        
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -270,14 +272,13 @@ class HomeContent extends StatelessWidget {
                       color: Colors.black,
                     )),
                 HorizintalSpace(11),
+            //***********************************************See All**************************************** */
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => SignUpView(),
+                    Get.to(() => MedicalView(),
                         transition: Transition.rightToLeft,
                         duration: const Duration(milliseconds: 150));
                   },
-            //***********************************************See All**************************************** */
-
                   child: const Text(
                     'See All',
                     style: TextStyle(
