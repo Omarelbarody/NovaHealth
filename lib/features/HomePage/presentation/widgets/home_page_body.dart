@@ -1,6 +1,7 @@
 import 'package:NovaHealth/core/utils/size_config.dart';
 import 'package:NovaHealth/core/widgets/space_widget.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
+import 'package:NovaHealth/features/ChatBot/presentation/widgets/chatbot_page_view.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:NovaHealth/features/MedicaNews/presentation/widgets/medical_news_view.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            //***********************************************Ai bot************************************************* */
+            //***********************************************Nova bot************************************************* */
 
       body: Stack(
   children: [
@@ -46,6 +47,9 @@ class _HomeViewBodyState extends State<HomeViewBody> {
           width: 92,
           child: FloatingActionButton(
             onPressed: () {
+                Get.to(() => ChatbotPageView(),
+                        transition: Transition.rightToLeft,
+                        duration: const Duration(milliseconds: 150));
               // Add your AI bot functionality here
             },
             backgroundColor: Colors.transparent,
