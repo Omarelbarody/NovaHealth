@@ -210,81 +210,85 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
             fit: BoxFit.cover,
           ),
         ),
-        Container(
-          color: Colors.grey[100]?.withOpacity(0.6),
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            padding: EdgeInsets.zero,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                VerticalSpace(5),
-                Row(
+        Positioned.fill(
+          child: Container(
+            color: Colors.grey[100]?.withOpacity(0.6),
+            child: SizedBox.expand(
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                padding: EdgeInsets.zero,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    HorizontalSpace(1),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'Nova Bot',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
+                    VerticalSpace(5),
+                    Row(
+                      children: [
+                        HorizontalSpace(1),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Nova Bot',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ],
                     ),
+                    //VerticalSpace(1),
+                    ..._messages,
+                    if (_showMedicineInput)
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 2,
+                              offset: const Offset(0, -1),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _medicineController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Enter medicine name...',
+                                  border: OutlineInputBorder(),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                ),
+                                enabled: !_isLoading,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: _isLoading ? null : _handleMedicineQuery,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                      ),
+                                    )
+                                  : const Text('Ask'),
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
-                //VerticalSpace(1),
-                ..._messages,
-                if (_showMedicineInput)
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 2,
-                          offset: const Offset(0, -1),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _medicineController,
-                            decoration: const InputDecoration(
-                              hintText: 'Enter medicine name...',
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            ),
-                            enabled: !_isLoading,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: _isLoading ? null : _handleMedicineQuery,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          ),
-                          child: _isLoading
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ),
-                                )
-                              : const Text('Ask'),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
+              ),
             ),
           ),
         ),
