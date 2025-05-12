@@ -243,11 +243,13 @@ class DepartmentContent extends StatelessWidget {
 class _ProfileMenuButton extends StatelessWidget {
   final IconData icon;
   final String label;
+  final double iconSize;
 
   const _ProfileMenuButton({
     Key? key,
     required this.icon,
     required this.label,
+    this.iconSize = 29,
   }) : super(key: key);
 
   @override
@@ -265,7 +267,7 @@ class _ProfileMenuButton extends StatelessWidget {
       },
       child: Row(
         children: [
-          Icon(icon, color: Colors.blue),
+          Icon(icon, color: Colors.blue, size: iconSize),
           const SizedBox(width: 16),
           Text(
             label,
