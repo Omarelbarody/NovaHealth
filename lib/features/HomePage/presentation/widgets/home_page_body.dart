@@ -3,7 +3,9 @@ import 'package:NovaHealth/core/widgets/space_widget.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/ChatBot/presentation/widgets/chatbot_page_view.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
+import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/MedicaNews/presentation/widgets/medical_news_view.dart';
+import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
@@ -25,10 +27,18 @@ class _HomeViewBodyState extends State<HomeViewBody> {
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  switch (index) {
+    case 0:
+      Get.to(() => const HomeView(), transition: Transition.fade);
+      break;
+    // case 1:
+    //   Get.to(() => const ActivitiesPageView(), transition: Transition.rightToLeft);
+    //   break;
+    case 2:
+      Get.to(() => const ProfilePageView(), transition: Transition.rightToLeft);
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {
