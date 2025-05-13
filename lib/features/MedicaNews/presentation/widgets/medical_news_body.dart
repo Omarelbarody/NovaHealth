@@ -4,6 +4,8 @@ import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/si
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/MedicaNews/presentation/widgets/medical_news_view.dart';
+import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
+import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
@@ -24,39 +26,91 @@ class _MedicalBodyState extends State<MedicalBody> {
     Center(child: Text('Profile Page')),
   ];
 
-  void _onItemTapped(int index) {
-    if (index == 0) {
-      // Navigate to HomeView on home icon tap
-      Get.to(() => const HomeView(), transition: Transition.fade);
-    } else {
-      setState(() {
-        _selectedIndex = index;
-      });
-    }
+  // void _onItemTapped(int index) {
+  //   if (index == 0) {
+  //     // Navigate to HomeView on home icon tap
+  //     Get.to(() => const HomeView(), transition: Transition.fade);
+  //   }
+  //   else if (index == 1) {
+  //     // Navigate to ActivitiesPageView on activities icon tap
+  //     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
+  //   }
+  //   else if (index == 2) {
+  //     // Navigate to ProfilePageView on profile icon tap
+  //     Get.to(() => const ProfilePageView(), transition: Transition.fade);
+  //   }
+  //   else {
+  //     setState(() {
+  //       _selectedIndex = index;
+  //     });
+  //   }
+  // }
+//   void _onItemTapped(int index) {
+//   setState(() {
+//     _selectedIndex = index;
+//   });
+
+//   if (index == 0) {
+//     Get.to(() => const HomeView(), transition: Transition.fade);
+//   } else if (index == 1) {
+//     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
+//   } else if (index == 2) {
+//     Get.to(() => const ProfilePageView(), transition: Transition.fade);
+//   }
+// }
+void _onItemTapped(int index) {
+  if (_selectedIndex == index) return; // Do nothing if already selected
+
+  setState(() {
+    _selectedIndex = index;
+  });
+
+  if (index == 0) {
+    Get.to(() => const HomeView(), transition: Transition.fade);
+  } else if (index == 1) {
+    Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
+  } else if (index == 2) {
+    Get.to(() => const ProfilePageView(), transition: Transition.fade);
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event),
-            label: 'Activities',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(height: 0.5, thickness: 1),
+          BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_outlined, size: 28),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.assignment_outlined, size: 28),
+                label: 'Activities',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person_outline, size: 28),
+                label: 'Profile',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
+            showUnselectedLabels: true,
+            onTap: _onItemTapped,
+            // type: BottomNavigationBarType.fixed,
+            // elevation: 0,
+            backgroundColor: Colors.white,
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
       ),
     );
   }
