@@ -55,11 +55,11 @@ class _SignUpViewBody2State extends State<SignUpViewBody2> {
       );
 
       if (response.statusCode == 200) {
-        Get.to(() => LoginViewBody(),
+        Get.offAll(() => const LoginView(),
             transition: Transition.rightToLeft,
-            duration: Duration(milliseconds: 150));
+            duration: const Duration(milliseconds: 150));
       } else {
-        Get.snackbar("Error", "Invalid login credentials",
+        Get.snackbar("Error", "Invalid signup credentials",
             snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
@@ -67,7 +67,8 @@ class _SignUpViewBody2State extends State<SignUpViewBody2> {
           snackPosition: SnackPosition.BOTTOM);
     }
   }
-    Widget  buildLabel(String text) {
+
+  Widget buildLabel(String text) {
     return RichText(
       text: TextSpan(
         text: text,

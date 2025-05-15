@@ -49,7 +49,8 @@ class _LoginViewBodyState extends State<LoginViewBody> {
         // Get.snackbar("Error", "Invalid login credentials",
         //     snackPosition: SnackPosition.BOTTOM);
       }
-    } catch (e) {
+    } 
+    catch (e) {
       Get.snackbar("Error", "Failed to connect to server",
           snackPosition: SnackPosition.BOTTOM);
     }

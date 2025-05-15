@@ -1,8 +1,10 @@
 import 'package:NovaHealth/core/utils/size_config.dart';
 import 'package:NovaHealth/core/widgets/backgroung_color_page.dart';
 import 'package:NovaHealth/core/widgets/space_widget.dart';
+import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_body.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
+import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
@@ -21,10 +23,15 @@ class ProfilePageBody extends StatefulWidget {
 class _ProfilePageBodyState extends State<ProfilePageBody> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
-    DepartmentContent(),
-    Center(child: Text('Activities Page')),
-    Center(child: Text('Profile Page')),
+  // static const List<Widget> _pages = <Widget>[
+  //   ProfileContent(),
+  //   Center(child: Text('Activities Page')),
+  //   Center(child: Text('Profile Page')),
+  // ];
+    static const List<Widget> _pages = <Widget>[
+    HomeContent(),
+    ActivitiesContent(),
+    ProfileContent(),
   ];
 
   // void _onItemTapped(int index) {
@@ -66,13 +73,13 @@ void _onItemTapped(int index) {
     _selectedIndex = index;
   });
 
-  if (index == 0) {
-    Get.to(() => const HomeView(), transition: Transition.fade);
-  } else if (index == 1) {
-    Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  } else if (index == 2) {
-    Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  }
+  // if (index == 0) {
+  //   Get.to(() => const HomeView(), transition: Transition.fade);
+  // } else if (index == 1) {
+  //   Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
+  // } else if (index == 2) {
+  //   Get.to(() => const ProfilePageView(), transition: Transition.fade);
+  // }
 }
 
 
@@ -163,6 +170,7 @@ void _onItemTapped(int index) {
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+    
           Divider(height: 0.5, thickness: 1),
           BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
@@ -196,79 +204,82 @@ void _onItemTapped(int index) {
   }
 }
 
-class DepartmentContent extends StatelessWidget {
-  const DepartmentContent({super.key});
+class ProfileContent extends StatelessWidget {
+  const ProfileContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 60),
-            // Profile photo
-            Center(
-              child: SizedBox(
-                width: 160,
-                height: 160,
-                child: CircleAvatar(
-                  radius: 60,
-                  backgroundImage: AssetImage('assets/images/ProfilePhoto.png'),
+    return Container(
+      color: const Color(0xFF050D2C),
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 60),
+              // Profile photo
+              Center(
+                child: SizedBox(
+                  width: 160,
+                  height: 160,
+                  child: CircleAvatar(
+                    radius: 60,
+                    backgroundImage: AssetImage('assets/images/ProfilePhoto.png'),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            // User name
-            const Text(
-              'Omar Elbarody',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+              const SizedBox(height: 12),
+              // User name
+              const Text(
+                'Omar Elbarody',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 35),
-            // Menu items
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
+              const SizedBox(height: 35),
+              // Menu items
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 2,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    _ProfileMenuButton(icon: Icons.person, label: 'Profile'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.receipt_long, label: 'Prescriptions'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.receipt_long, label: 'Labs'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.receipt_long, label: 'Radology'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.credit_card, label: 'Payment Method'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.lock, label: 'Privacy Policy'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.settings, label: 'Settings'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.help_outline, label: 'Help'),
+                    Divider(height: 1),
+                    _ProfileMenuButton(icon: Icons.logout, label: 'Logout'),
+                  ],
+                ),
               ),
-              child: Column(
-                children: [
-                  _ProfileMenuButton(icon: Icons.person, label: 'Profile'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.receipt_long, label: 'Prescriptions'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.receipt_long, label: 'Labs'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.receipt_long, label: 'Radology'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.credit_card, label: 'Payment Method'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.lock, label: 'Privacy Policy'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.settings, label: 'Settings'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.help_outline, label: 'Help'),
-                  Divider(height: 1),
-                  _ProfileMenuButton(icon: Icons.logout, label: 'Logout'),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -306,7 +317,7 @@ class _ProfileMenuButton extends StatelessWidget {
           const SizedBox(width: 16),
           Text(
             label,
-            style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w400),
+            style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w300),
           ),
         ],
       ),

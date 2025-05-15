@@ -21,9 +21,9 @@ class _MedicalBodyState extends State<MedicalBody> {
   int _selectedIndex = 0;
 
   static const List<Widget> _pages = <Widget>[
-    MedicalContent(),
-    Center(child: Text('Activities Page')),
-    Center(child: Text('Profile Page')),
+    HomeView(),
+    ActivitiesPageView(),
+    ProfilePageView(),
   ];
 
   // void _onItemTapped(int index) {
@@ -65,13 +65,13 @@ void _onItemTapped(int index) {
     _selectedIndex = index;
   });
 
-  if (index == 0) {
-    Get.to(() => const HomeView(), transition: Transition.fade);
-  } else if (index == 1) {
-    Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  } else if (index == 2) {
-    Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  }
+  // if (index == 0) {
+  //   Get.to(() => const HomeView(), transition: Transition.fade);
+  // } else if (index == 1) {
+  //   Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
+  // } else if (index == 2) {
+  //   Get.to(() => const ProfilePageView(), transition: Transition.fade);
+  // }
 }
 
 

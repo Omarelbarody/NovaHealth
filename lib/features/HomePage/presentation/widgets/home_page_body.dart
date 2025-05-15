@@ -1,10 +1,13 @@
 import 'package:NovaHealth/core/utils/size_config.dart';
 import 'package:NovaHealth/core/widgets/space_widget.dart';
+import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_body.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/ChatBot/presentation/widgets/chatbot_page_view.dart';
+import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_body.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/MedicaNews/presentation/widgets/medical_news_view.dart';
+import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_body.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +26,8 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
   static const List<Widget> _pages = <Widget>[
     HomeContent(),
-    Center(child: Text('Activities Page')),
-    Center(child: Text('Profile Page')),
+    ActivitiesContent(),
+    ProfileContent(),
   ];
 
   // void _onItemTapped(int index) {
@@ -65,14 +68,6 @@ void _onItemTapped(int index) {
   setState(() {
     _selectedIndex = index;
   });
-
-  if (index == 0) {
-    Get.to(() => const HomeView(), transition: Transition.fade);
-  } else if (index == 1) {
-    Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  } else if (index == 2) {
-    Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  }
 }
 
 
