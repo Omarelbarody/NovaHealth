@@ -6,8 +6,12 @@ import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/si
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
+import 'package:NovaHealth/features/Labs/widgets/labs_page_view.dart';
+import 'package:NovaHealth/features/Prescriptions/presentation/widgets/Prescriptions_page_view.dart';
+import 'package:NovaHealth/features/Profile%20Data/presentation/widgets/profile_data_view.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
+import 'package:NovaHealth/features/Radology/widgets/Radology_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
@@ -266,6 +270,18 @@ class _ProfileMenuButton extends StatelessWidget {
       onPressed: () {
         if (label == 'Logout') {
           Get.to(() => const LoginView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
+        }
+        if (label == 'Profile') {
+          Get.to(() => const ProfileDataView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
+        }
+          if (label == 'Prescriptions') {
+          Get.to(() => const PrescriptionsPageView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
+        }
+            if (label == 'Labs') {
+          Get.to(() => const labsPageView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
+        }
+              if (label == 'Radology') {
+          Get.to(() => const RadologysPageView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
         }
       },
       child: Row(
