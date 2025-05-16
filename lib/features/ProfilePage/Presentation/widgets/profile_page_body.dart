@@ -23,63 +23,20 @@ class ProfilePageBody extends StatefulWidget {
 class _ProfilePageBodyState extends State<ProfilePageBody> {
   int _selectedIndex = 0;
 
-  // static const List<Widget> _pages = <Widget>[
-  //   ProfileContent(),
-  //   Center(child: Text('Activities Page')),
-  //   Center(child: Text('Profile Page')),
-  // ];
+
     static const List<Widget> _pages = <Widget>[
     HomeContent(),
     ActivitiesContent(),
     ProfileContent(),
   ];
 
-  // void _onItemTapped(int index) {
-  //   if (index == 0) {
-  //     // Navigate to HomeView on home icon tap
-  //     Get.to(() => const HomeView(), transition: Transition.fade);
-  //   }
-  //   else if (index == 1) {
-  //     // Navigate to ActivitiesPageView on activities icon tap
-  //     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  //   }
-  //   else if (index == 2) {
-  //     // Navigate to ProfilePageView on profile icon tap
-  //     Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  //   }
-  //   else {
-  //     setState(() {
-  //       _selectedIndex = index;
-  //     });
-  //   }
-  // }
-//   void _onItemTapped(int index) {
-//   setState(() {
-//     _selectedIndex = index;
-//   });
-
-//   if (index == 0) {
-//     Get.to(() => const HomeView(), transition: Transition.fade);
-//   } else if (index == 1) {
-//     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-//   } else if (index == 2) {
-//     Get.to(() => const ProfilePageView(), transition: Transition.fade);
-//   }
-// }
 void _onItemTapped(int index) {
   if (_selectedIndex == index) return; // Do nothing if already selected
 
   setState(() {
     _selectedIndex = index;
   });
-
-  // if (index == 0) {
-  //   Get.to(() => const HomeView(), transition: Transition.fade);
-  // } else if (index == 1) {
-  //   Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  // } else if (index == 2) {
-  //   Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  // }
+Get.to(() => const ProfilePageView(), transition: Transition.fade);
 }
 
 

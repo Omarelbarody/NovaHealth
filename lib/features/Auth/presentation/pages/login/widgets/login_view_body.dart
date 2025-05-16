@@ -24,10 +24,10 @@ class _LoginViewBodyState extends State<LoginViewBody> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> login() async {
-    final String url = "https://2bc7-197-37-59-62.ngrok-free.app/api/v1/auth/login";
+    final String url = "https://b0c0-197-37-37-7.ngrok-free.app/api/v1/auth/login/";
     final Map<String, String> headers = {"Content-Type": "application/json"};
     final Map<String, String> body = {
-      "phoneNumber": phoneController.text,
+      "phone_number": phoneController.text,
       "password": passwordController.text,
     };
 
@@ -49,8 +49,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
         // Get.snackbar("Error", "Invalid login credentials",
         //     snackPosition: SnackPosition.BOTTOM);
       }
-    } 
-    catch (e) {
+    } catch (e) {
       Get.snackbar("Error", "Failed to connect to server",
           snackPosition: SnackPosition.BOTTOM);
     }

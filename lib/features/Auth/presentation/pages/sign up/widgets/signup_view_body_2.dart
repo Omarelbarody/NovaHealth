@@ -33,19 +33,23 @@ class _SignUpViewBody2State extends State<SignUpViewBody2> {
   final TextEditingController genderController = TextEditingController();
   bool _hasError = false;
 
-  Future<void> signup() async {
-    final String url = "https://2bc7-197-37-59-62.ngrok-free.app/api/v1/auth/signup";
-    final Map<String, String> headers = {"Content-Type": "application/json"};
-    final Map<String, String> body = {
-      "fullName": fullNameController.text,
+Future<void> signup() async {
+  final String url = "https://b0c0-197-37-37-7.ngrok-free.app/api/v1/auth/signup/";
+  final Map<String, String> headers = {"Content-Type": "application/json"};
+
+  final Map<String, dynamic> body = {
+    "username": emailController.text,
+    "phone_number": phoneNumberController.text,
+    "password": passwordController.text,
+    "profile": {
+      "full_name": fullNameController.text,
+      "dob": dobController.text,
       "address": addressController.text,
       "city": cityController.text,
-      "phoneNumber": phoneNumberController.text,
-      "email": emailController.text,
-      "password": passwordController.text,
-      "dob": dobController.text,
       "gender": genderController.text,
-    };
+    }
+  };
+
 
     try {
       final response = await http.post(
@@ -53,8 +57,10 @@ class _SignUpViewBody2State extends State<SignUpViewBody2> {
         headers: headers,
         body: jsonEncode(body),
       );
+          debugPrint("Signup Response Status: ${response.statusCode}");
+          debugPrint("Signup Response Body: ${response.body}");
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         Get.offAll(() => const LoginView(),
             transition: Transition.rightToLeft,
             duration: const Duration(milliseconds: 150));

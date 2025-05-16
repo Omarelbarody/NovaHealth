@@ -18,101 +18,9 @@ class MedicalBody extends StatefulWidget {
 }
 
 class _MedicalBodyState extends State<MedicalBody> {
-  int _selectedIndex = 0;
-
-  static const List<Widget> _pages = <Widget>[
-    HomeView(),
-    ActivitiesPageView(),
-    ProfilePageView(),
-  ];
-
-  // void _onItemTapped(int index) {
-  //   if (index == 0) {
-  //     // Navigate to HomeView on home icon tap
-  //     Get.to(() => const HomeView(), transition: Transition.fade);
-  //   }
-  //   else if (index == 1) {
-  //     // Navigate to ActivitiesPageView on activities icon tap
-  //     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  //   }
-  //   else if (index == 2) {
-  //     // Navigate to ProfilePageView on profile icon tap
-  //     Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  //   }
-  //   else {
-  //     setState(() {
-  //       _selectedIndex = index;
-  //     });
-  //   }
-  // }
-//   void _onItemTapped(int index) {
-//   setState(() {
-//     _selectedIndex = index;
-//   });
-
-//   if (index == 0) {
-//     Get.to(() => const HomeView(), transition: Transition.fade);
-//   } else if (index == 1) {
-//     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-//   } else if (index == 2) {
-//     Get.to(() => const ProfilePageView(), transition: Transition.fade);
-//   }
-// }
-void _onItemTapped(int index) {
-  if (_selectedIndex == index) return; // Do nothing if already selected
-
-  setState(() {
-    _selectedIndex = index;
-  });
-
-  // if (index == 0) {
-  //   Get.to(() => const HomeView(), transition: Transition.fade);
-  // } else if (index == 1) {
-  //   Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  // } else if (index == 2) {
-  //   Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  // }
-}
-
-
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Divider(height: 0.5, thickness: 1),
-          BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home_outlined, size: 28),
-                label: 'Home',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.assignment_outlined, size: 28),
-                label: 'Activities',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline, size: 28),
-                label: 'Profile',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
-            showUnselectedLabels: true,
-            onTap: _onItemTapped,
-            // type: BottomNavigationBarType.fixed,
-            // elevation: 0,
-            backgroundColor: Colors.white,
-          ),
-        ],
-      ),
-    );
+    return const MedicalContent();
   }
 }
 
@@ -211,7 +119,8 @@ class MedicalContent extends StatelessWidget {
             Image.asset('assets/images/Healthing living 2.png'),
             Image.asset('assets/images/Covid19.png'),
             Image.asset('assets/images/comon diseases.png'),
-            //Image.asset('assets/images/Medical news.png'),
+            // Image.asset('assets/images/Medical news.png'),
+            // Image.asset('assets/images/Healthing living 2.png'),
           ],
         ),
       ),
