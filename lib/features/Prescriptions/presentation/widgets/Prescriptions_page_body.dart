@@ -86,7 +86,6 @@ class _PrescriptionsPageBodyState extends State<PrescriptionsPageBody> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -135,6 +134,8 @@ class _PrescriptionsPageBodyState extends State<PrescriptionsPageBody> {
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   elevation: 3,
+                  color: Colors.white,
+                  shadowColor: Colors.grey,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -206,7 +207,10 @@ class _PrescriptionsPageBodyState extends State<PrescriptionsPageBody> {
                             children: [
                               TextButton.icon(
                                 onPressed: () => _openPrescription(prescription.fileUrl),
-                                icon: const Icon(Icons.remove_red_eye),
+                                icon: IconTheme(
+                                    data: const IconThemeData(color: Colors.blue),
+                                    child: const Icon(Icons.remove_red_eye),
+                                ),
                                 label: const Text('View Prescription'),
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.blue,

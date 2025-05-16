@@ -187,6 +187,8 @@ class _ProfileDataBodyState extends State<ProfileDataBody> {
             const SizedBox(height: 16),
             Card(
               elevation: 4,
+              color: Colors.white,
+              shadowColor: Colors.grey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -200,6 +202,7 @@ class _ProfileDataBodyState extends State<ProfileDataBody> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -215,6 +218,8 @@ class _ProfileDataBodyState extends State<ProfileDataBody> {
             const SizedBox(height: 16),
             Card(
               elevation: 4,
+              color: Colors.white,
+              shadowColor: Colors.grey,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
