@@ -1,5 +1,4 @@
-
-import 'package:NovaHealth/features/Radology/widgets/Radology_page_body.dart';
+import 'package:NovaHealth/features/Radology/presentation/widgets/Radology_page_body.dart';
 import 'package:flutter/material.dart';
 
 class RadologysPageView extends StatelessWidget {

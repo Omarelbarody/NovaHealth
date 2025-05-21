@@ -1,5 +1,4 @@
-
-import 'package:NovaHealth/features/Labs/widgets/labs_page_body.dart';
+import 'package:NovaHealth/features/Labs/presentation/widgets/labs_page_body.dart';
 import 'package:flutter/material.dart';
 
 class labsPageView extends StatelessWidget {

@@ -6,12 +6,12 @@ import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/si
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
-import 'package:NovaHealth/features/Labs/widgets/labs_page_view.dart';
+import 'package:NovaHealth/features/Labs/presentation/widgets/labs_page_view.dart';
 import 'package:NovaHealth/features/Prescriptions/presentation/widgets/Prescriptions_page_view.dart';
 import 'package:NovaHealth/features/Profile%20Data/presentation/widgets/profile_data_view.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
-import 'package:NovaHealth/features/Radology/widgets/Radology_page_view.dart';
+import 'package:NovaHealth/features/Radology/presentation/widgets/Radology_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
