@@ -43,11 +43,11 @@ class _LoginViewBodyState extends State<LoginViewBody> {
             transition: Transition.rightToLeft,
             duration: Duration(milliseconds: 150));
       } else {
-        Get.to(() => HomeViewBody(),
-            transition: Transition.rightToLeft,
-            duration: Duration(milliseconds: 150));
-        // Get.snackbar("Error", "Invalid login credentials",
-        //     snackPosition: SnackPosition.BOTTOM);
+        // Get.to(() => HomeViewBody(),
+        //     transition: Transition.rightToLeft,
+        //     duration: Duration(milliseconds: 150));
+        Get.snackbar("Error", "Invalid login credentials",
+            snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to connect to server",

@@ -1,13 +1,18 @@
-import 'package:NovaHealth/features/Doctor List/widgets/doctor_list_page_body.dart';
 import 'package:flutter/material.dart';
+import 'package:NovaHealth/features/Doctor%20List/presentation/widgets/doctor_list_page_body.dart';
 
-class doctorListPageView extends StatelessWidget {
-  const doctorListPageView({super.key});
+class DoctorListPageView extends StatelessWidget {
+  final String specialty;
+
+  const DoctorListPageView({
+    Key? key,
+    required this.specialty,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: doctorListPageBody(),
+      body: doctorListPageBody(specialty: specialty),
     );
   }
 }

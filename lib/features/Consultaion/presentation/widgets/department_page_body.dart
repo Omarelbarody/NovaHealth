@@ -3,6 +3,7 @@ import 'package:NovaHealth/core/widgets/space_widget.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_body.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
+import 'package:NovaHealth/features/Doctor%20List/presentation/widgets/doctor_list_page_view.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_body.dart';
@@ -49,6 +50,7 @@ class DepartmentContent extends StatelessWidget {
               ],
             ),
         VerticallSpace(2),
+        
             //*******************************************Choose the Department. ***************************************** */
             Row(
               children: [
@@ -65,33 +67,49 @@ class DepartmentContent extends StatelessWidget {
             Row(
               children: [
                 HorizintalSpace(1),
-                //*********************************************Orthopedic *********************************************/
+                                //*********************************************Cardiology *********************************************/
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => const DoctorListPageView(specialty: 'Cardiology'), 
+                      transition: Transition.rightToLeft, 
+                      duration: const Duration(milliseconds: 200)
+                    );
+                  },
                   child: Ink.image(
-                    image: AssetImage('assets/images/Orthopedic.png'),
+                    image: AssetImage('assets/images/Cardiology.png'),
                     height: 130,
                     width: 110,
                     fit: BoxFit.cover,
                   ),
                 ),
+                HorizintalSpace(1),
+                                //*******************************************ENT*********************************************** */
+                InkWell(
+                  onTap: () {
+                    Get.to(() => const DoctorListPageView(specialty: 'ENT'), 
+                      transition: Transition.rightToLeft, 
+                      duration: const Duration(milliseconds: 200)
+                    );
+                  },
+                  child: Ink.image(
+                    image: AssetImage('assets/images/ENT.png'),
+                    height: 130,
+                    width: 110,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                
                 HorizintalSpace(1),
                 //*********************************************Dermatology *********************************************/
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => const DoctorListPageView(specialty: 'Dermatology'), 
+                      transition: Transition.rightToLeft, 
+                      duration: const Duration(milliseconds: 200)
+                    );
+                  },
                   child: Ink.image(
                     image: AssetImage('assets/images/Dermatology.png'),
-                    height: 130,
-                    width: 110,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                HorizintalSpace(1),
-                //*******************************************ENT*********************************************** */
-                InkWell(
-                  onTap: () {},
-                  child: Ink.image(
-                    image: AssetImage('assets/images/ENT.png'),
                     height: 130,
                     width: 110,
                     fit: BoxFit.cover,
@@ -106,7 +124,12 @@ class DepartmentContent extends StatelessWidget {
                 HorizintalSpace(1),
                   //*******************************************InternalMedicine*********************************************** */
                   InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => const DoctorListPageView(specialty: 'Internal Medicine'), 
+                      transition: Transition.rightToLeft, 
+                      duration: const Duration(milliseconds: 200)
+                    );
+                  },
                   child: Ink.image(
                     image: AssetImage('assets/images/InternalMedicine.png'),
                     height: 130,
@@ -117,7 +140,12 @@ class DepartmentContent extends StatelessWidget {
                 HorizintalSpace(1),
                 //*********************************************Dental *********************************************/
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => const DoctorListPageView(specialty: 'Dental'), 
+                      transition: Transition.rightToLeft, 
+                      duration: const Duration(milliseconds: 200)
+                    );
+                  },
                   child: Ink.image(
                     image: AssetImage('assets/images/Dental.png'),
                     height: 130,
@@ -126,23 +154,23 @@ class DepartmentContent extends StatelessWidget {
                   ),
                 ),
                   HorizintalSpace(1),
-                //*********************************************Cardiology *********************************************/
+                              //*********************************************Orthopedic *********************************************/
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(() => const DoctorListPageView(specialty: 'Orthopedic'), 
+                      transition: Transition.rightToLeft, 
+                      duration: const Duration(milliseconds: 200)
+                    );
+                  },
                   child: Ink.image(
-                    image: AssetImage('assets/images/Cardiology.png'),
+                    image: AssetImage('assets/images/Orthopedic.png'),
                     height: 130,
                     width: 110,
                     fit: BoxFit.cover,
                   ),
                 ),
               ],
-              
-              
-
             )
-
-
           ],
         ),
       ),
