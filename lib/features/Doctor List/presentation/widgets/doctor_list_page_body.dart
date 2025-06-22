@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:NovaHealth/features/Doctor%20List/data/models/booking_model.dart';
+import 'package:NovaHealth/utils/api_endpoint.dart';
 
 class Doctor {
   final int userId;
@@ -38,7 +39,7 @@ class Doctor {
     }
     
     return Doctor(
-      userId: json['user_id'],
+      userId: json['id'],
       fullName: json['full_name'],
       gender: json['gender'],
       specialty: json['specialty'],
@@ -192,7 +193,7 @@ class _doctorListPageBodyState extends State<doctorListPageBody> {
       // Format today's date in yyyy-MM-dd format
       final formattedDate = formatDate(selectedDate);
       
-      var url = 'https://b0c0-197-37-37-7.ngrok-free.app/api/v1/profiles/doctors/?specialty=${widget.specialty}&date=$formattedDate';
+      String url = ApiEndPoints.baseUrl + ApiEndPoints.doctorEndpoints.doctorsBySpecialty(widget.specialty, formattedDate);
       
       // Add search query if provided
       if (searchQuery != null && searchQuery.isNotEmpty) {
@@ -513,25 +514,28 @@ appBar: AppBar(
             ),
 
           // Date Selection
-          SizedBox(
-            height: 60,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildDateButton('Today', selectedDate == 'Today'),
-                _buildDateButton('Tomorrow', selectedDate == 'Tomorrow'),
-                _buildDateButton(
-                    'Fri, ${DateTime.now().add(const Duration(days: 2)).day}',
-                    selectedDate ==
-                        'Fri, ${DateTime.now().add(const Duration(days: 2)).day}'),
-                _buildDateButton(
-                    'Sat, ${DateTime.now().add(const Duration(days: 3)).day}',
-                    selectedDate ==
-                        'Sat, ${DateTime.now().add(const Duration(days: 3)).day}'),
-              ],
-            ),
-          ),
+SizedBox(
+  height: 60,
+  child: ListView(
+    scrollDirection: Axis.horizontal,
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    children: [
+      _buildDateButton('Today', selectedDate == 'Today'),
+      _buildDateButton('Tomorrow', selectedDate == 'Tomorrow'),
+      _buildDateButton(
+        '${DateFormat('EEE').format(DateTime.now().add(const Duration(days: 2)))}, ${DateTime.now().add(const Duration(days: 2)).day}',
+        selectedDate ==
+            '${DateFormat('EEE').format(DateTime.now().add(const Duration(days: 2)))}, ${DateTime.now().add(const Duration(days: 2)).day}',
+      ),
+      _buildDateButton(
+        '${DateFormat('EEE').format(DateTime.now().add(const Duration(days: 3)))}, ${DateTime.now().add(const Duration(days: 3)).day}',
+        selectedDate ==
+            '${DateFormat('EEE').format(DateTime.now().add(const Duration(days: 3)))}, ${DateTime.now().add(const Duration(days: 3)).day}',
+      ),
+    ],
+  ),
+),
+
 
           // Filter indicator row
           if (genderFilter != null || searchQuery.isNotEmpty)

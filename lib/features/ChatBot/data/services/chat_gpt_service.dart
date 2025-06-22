@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ChatGptService {
-  static const String _apiKey = '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';
+  static const String _apiKey = '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';
   static const String _apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
 
   Future<String> getMedicineInfo(String medicineName) async {
@@ -12,15 +12,16 @@ class ChatGptService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $_apiKey',
-          'HTTP-Referer': 'http://localhost', // Or your deployed app domain
-          'X-Title': 'NovaHealth ChatBot'
+          'HTTP-Referer': 'http://localhost', // Or your production site
+          'X-Title': 'NovaHealth ChatBot',
         },
         body: jsonEncode({
-          'model': 'deepseek/deepseek-prover-v2:free',
+          'model': 'deepseek/deepseek-r1-0528:free', // You can change the model here
           'messages': [
             {
               'role': 'system',
-              'content': 'You are a medical assistant. Provide information about medicines in a clear, concise format. Include benefits and side effects. Always reply in the same language as the user\'s question.',
+              'content':
+                  'You are a medical assistant. Provide information about medicines in a clear, concise format. Include benefits and side effects. Always reply in the same language as the user\'s question.',
             },
             {
               'role': 'user',
@@ -33,7 +34,7 @@ class ChatGptService {
       );
 
       print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
+      print('Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -47,4 +48,4 @@ class ChatGptService {
       return 'Sorry, I encountered an error while fetching information about $medicineName. Please try again later.';
     }
   }
-} 
+}

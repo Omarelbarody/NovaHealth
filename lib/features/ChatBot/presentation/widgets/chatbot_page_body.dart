@@ -65,14 +65,8 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
   }
 
   void _addInitialMessages() {
-    _messages.add(const ChatMessage(
-      text: "Hello!",
-      isUser: false,
-    ));
-    _messages.add(const ChatMessage(
-      text: "Welcome to Nova Health.",
-      isUser: false,
-    ));
+    _messages.add(const ChatMessage(text: "Hello!", isUser: false));
+    _messages.add(const ChatMessage(text: "Welcome to Nova Health.", isUser: false));
     _addButtons();
     _scrollToBottom();
   }
@@ -99,9 +93,7 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
           ),
           const SizedBox(height: 12),
           ElevatedButton(
-            onPressed: () {
-              _showMedicineQuery();
-            },
+            onPressed: _showMedicineQuery,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
@@ -148,17 +140,20 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
   }
 
   void _handleMedicineQuery() async {
-    if (_medicineController.text.trim().isEmpty) return;
+    final String medicineName = _medicineController.text.trim();
+
+    if (medicineName.isEmpty) return;
 
     setState(() {
       _isLoading = true;
-      // Add user's medicine query
+
+      // Show user message
       _messages.add(ChatMessage(
-        text: _medicineController.text,
+        text: medicineName,
         isUser: true,
       ));
 
-      // Add loading message
+      // Show loading message
       _messages.add(const ChatMessage(
         text: "I'm analyzing the medicine information. Please wait...",
         isUser: false,
@@ -170,12 +165,10 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
     });
 
     try {
-      final response = await _chatGptService.getMedicineInfo(_medicineController.text);
-      
+      final response = await _chatGptService.getMedicineInfo(medicineName);
+
       setState(() {
-        // Remove loading message
-        _messages.removeLast();
-        // Add ChatGPT response
+        _messages.removeLast(); // remove loading message
         _messages.add(ChatMessage(
           text: response,
           isUser: false,
@@ -186,9 +179,7 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
       });
     } catch (e) {
       setState(() {
-        // Remove loading message
-        _messages.removeLast();
-        // Add error message
+        _messages.removeLast(); // remove loading
         _messages.add(const ChatMessage(
           text: "Sorry, I encountered an error. Please try again.",
           isUser: false,
@@ -235,7 +226,6 @@ class _ChatbotPageBodyState extends State<ChatbotPageBody> {
                         ),
                       ],
                     ),
-                    //VerticalSpace(1),
                     ..._messages,
                     if (_showMedicineInput)
                       Container(

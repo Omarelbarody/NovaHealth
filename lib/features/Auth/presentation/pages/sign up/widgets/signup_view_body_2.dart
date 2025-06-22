@@ -14,6 +14,7 @@ import 'package:NovaHealth/features/Auth/presentation/pages/login/widgets/comple
 import 'package:NovaHealth/features/Auth/presentation/pages/login/widgets/complete_information_item_pass.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/on%20Bording/presentation/on_bordin_view.dart';
+import 'package:NovaHealth/utils/api_endpoint.dart';
 
 class SignUpViewBody2 extends StatefulWidget {
   const SignUpViewBody2({super.key});
@@ -34,7 +35,7 @@ class _SignUpViewBody2State extends State<SignUpViewBody2> {
   bool _hasError = false;
 
 Future<void> signup() async {
-  final String url = "https://b0c0-197-37-37-7.ngrok-free.app/api/v1/auth/signup/";
+  final String url = ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.signup;
   final Map<String, String> headers = {"Content-Type": "application/json"};
 
   final Map<String, dynamic> body = {

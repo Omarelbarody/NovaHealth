@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:NovaHealth/utils/api_endpoint.dart';
 
 class ProfileData {
   final String fullName;
@@ -61,7 +62,7 @@ class _ProfileDataBodyState extends State<ProfileDataBody> {
   Future<void> _fetchProfileData() async {
     try {
       final response = await http.get(
-        Uri.parse('https://b0c0-197-37-37-7.ngrok-free.app/api/v1/profiles/patients/8/'),
+        Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.profileEndpoints.patients + '8/'),
         headers: {
           'Content-Type': 'application/json',
         },

@@ -15,7 +15,7 @@ TextEditingController passwordController = TextEditingController();
     try {
       var headers = {'Content-Type': 'application/json'};
       var url = Uri.parse(
-        ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.registerEmail
+        ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.signup
       );
 
       Map<String, String> body = {

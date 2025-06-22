@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:NovaHealth/utils/api_endpoint.dart';
 
 class Prescription {
   final String doctorName;
@@ -48,7 +49,7 @@ class _PrescriptionsPageBodyState extends State<PrescriptionsPageBody> {
   Future<void> _fetchPrescriptions() async {
     try {
       final response = await http.get(
-        Uri.parse('https://b0c0-197-37-37-7.ngrok-free.app/api/v1/prescriptions/8/'),
+        Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.prescriptionEndpoints.prescriptions + '8/'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -75,8 +76,7 @@ class _PrescriptionsPageBodyState extends State<PrescriptionsPageBody> {
   }
 
   Future<void> _openPrescription(String fileUrl) async {
-    final baseUrl = 'https://b0c0-197-37-37-7.ngrok-free.app';
-    final fullUrl = '$baseUrl$fileUrl';
+    final fullUrl = ApiEndPoints.baseUrl.substring(0, ApiEndPoints.baseUrl.indexOf('/api/v1/')) + fileUrl;
     
     final Uri url = Uri.parse(fullUrl);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {

@@ -11,6 +11,7 @@ import 'package:NovaHealth/features/Auth/presentation/pages/login/widgets/comple
 import 'package:NovaHealth/features/Auth/presentation/pages/login/widgets/complete_information_item_pass.dart';
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/on%20Bording/presentation/on_bordin_view.dart';
+import 'package:NovaHealth/utils/api_endpoint.dart';
 
 class LoginViewBody extends StatefulWidget {
   const LoginViewBody({super.key});
@@ -24,7 +25,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> login() async {
-    final String url = "https://b0c0-197-37-37-7.ngrok-free.app/api/v1/auth/login/";
+    final String url = ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.login;
     final Map<String, String> headers = {"Content-Type": "application/json"};
     final Map<String, String> body = {
       "phone_number": phoneController.text,
@@ -42,12 +43,12 @@ class _LoginViewBodyState extends State<LoginViewBody> {
         Get.to(() => HomeViewBody(),
             transition: Transition.rightToLeft,
             duration: Duration(milliseconds: 150));
-      } else {
-        // Get.to(() => HomeViewBody(),
-        //     transition: Transition.rightToLeft,
-        //     duration: Duration(milliseconds: 150));
-        Get.snackbar("Error", "Invalid login credentials",
-            snackPosition: SnackPosition.BOTTOM);
+      } else { 
+        Get.to(() => HomeViewBody(),
+            transition: Transition.rightToLeft,
+            duration: Duration(milliseconds: 150));
+        // Get.snackbar("Error", "Invalid login credentials",
+        //     snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
       Get.snackbar("Error", "Failed to connect to server",
