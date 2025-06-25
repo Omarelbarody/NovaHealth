@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class ChatGptService {
-  static const String _apiKey = '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';
+  static const String _apiKey = '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';
   static const String _apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
 
   Future<String> getMedicineInfo(String medicineName) async {

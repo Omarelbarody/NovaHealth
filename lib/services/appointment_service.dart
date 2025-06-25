@@ -34,19 +34,22 @@ class AppointmentService {
     return appointments.where((appointment) => appointment.status == 'upcoming').toList();
   }
   
-  // Delete an appointment
+  // Delete an appointment - optimized for speed
   static Future<void> deleteAppointment(int appointmentId) async {
     final prefs = await SharedPreferences.getInstance();
     final appointmentsJson = prefs.getStringList(_appointmentsKey) ?? [];
     
-    // Filter out the appointment to delete
-    final updatedAppointments = appointmentsJson.where((json) {
+    // Use indexWhere for faster lookup
+    final index = appointmentsJson.indexWhere((json) {
       final appointment = AppointmentModel.fromJson(jsonDecode(json));
-      return appointment.appointmentId != appointmentId;
-    }).toList();
+      return appointment.appointmentId == appointmentId;
+    });
     
-    // Save back to SharedPreferences
-    await prefs.setStringList(_appointmentsKey, updatedAppointments);
+    // If found, remove directly by index (faster than filtering)
+    if (index >= 0) {
+      appointmentsJson.removeAt(index);
+      await prefs.setStringList(_appointmentsKey, appointmentsJson);
+    }
   }
   
   // Update an appointment status

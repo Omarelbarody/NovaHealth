@@ -351,17 +351,17 @@ class ChatMessage extends StatelessWidget {
               ),
               child: isUser 
                 ? Text(
-                    text,
-                    style: TextStyle(
-                      color: isUser ? Colors.white : Colors.black,
-                    ),
+                text,
+                style: TextStyle(
+                  color: isUser ? Colors.white : Colors.black,
+                ),
                   )
                 : FormattedText(
                     text: text,
                     style: const TextStyle(
                       color: Colors.black,
                     ),
-                  ),
+              ),
             ),
           ),
           if (isUser)
