@@ -13,64 +13,41 @@ import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_p
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
+import 'package:NovaHealth/features/HomePage/data/models/appointment_model.dart';
+import 'package:NovaHealth/services/appointment_service.dart';
+import 'package:intl/intl.dart';
+import 'package:NovaHealth/features/HomePage/presentation/widgets/appointments_list_page.dart';
 
-class HomeViewBody extends StatefulWidget {
-  const HomeViewBody({super.key});
+class HomePageBody extends StatefulWidget {
+  const HomePageBody({super.key});
 
   @override
-  _HomeViewBodyState createState() => _HomeViewBodyState();
+  _HomePageBodyState createState() => _HomePageBodyState();
 }
 
-class _HomeViewBodyState extends State<HomeViewBody> {
+class _HomePageBodyState extends State<HomePageBody> {
   int _selectedIndex = 0;
+  final homeContentKey = GlobalKey<_HomeContentState>();
 
-  static const List<Widget> _pages = <Widget>[
-    HomeContent(),
-    ActivitiesContent(),
-    ProfileContent(),
+  List<Widget> get _pages => [
+    HomeContent(key: homeContentKey),
+    const ActivitiesContent(),
+    const ProfileContent(),
   ];
 
-  // void _onItemTapped(int index) {
-  //   if (index == 0) {
-  //     // Navigate to HomeView on home icon tap
-  //     Get.to(() => const HomeView(), transition: Transition.fade);
-  //   }
-  //   else if (index == 1) {
-  //     // Navigate to ActivitiesPageView on activities icon tap
-  //     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-  //   }
-  //   else if (index == 2) {
-  //     // Navigate to ProfilePageView on profile icon tap
-  //     Get.to(() => const ProfilePageView(), transition: Transition.fade);
-  //   }
-  //   else {
-  //     setState(() {
-  //       _selectedIndex = index;
-  //     });
-  //   }
-  // }
-//   void _onItemTapped(int index) {
-//   setState(() {
-//     _selectedIndex = index;
-//   });
+  void _onItemTapped(int index) {
+    if (_selectedIndex == index) {
+      // If tapping the home tab while already on it, refresh appointments
+      if (index == 0 && homeContentKey.currentState != null) {
+        homeContentKey.currentState!._loadAppointments();
+      }
+      return; // Do nothing else if already selected
+    }
 
-//   if (index == 0) {
-//     Get.to(() => const HomeView(), transition: Transition.fade);
-//   } else if (index == 1) {
-//     Get.to(() => const ActivitiesPageView(), transition: Transition.fade);
-//   } else if (index == 2) {
-//     Get.to(() => const ProfilePageView(), transition: Transition.fade);
-//   }
-// }
-void _onItemTapped(int index) {
-  if (_selectedIndex == index) return; // Do nothing if already selected
-
-  setState(() {
-    _selectedIndex = index;
-  });
-}
-
-
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,8 +120,37 @@ void _onItemTapped(int index) {
   }
 }
 
-class HomeContent extends StatelessWidget {
+class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
+
+  @override
+  _HomeContentState createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  List<AppointmentModel> upcomingAppointments = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  Future<void> _loadAppointments() async {
+    try {
+      final appointments = await AppointmentService.getUpcomingAppointments();
+      setState(() {
+        upcomingAppointments = appointments;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading appointments: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,36 +295,76 @@ class HomeContent extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
+                const Spacer(),
+                if (upcomingAppointments.isNotEmpty)
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to appointments list view
+                      Get.to(() => const AppointmentsListPage(),
+                        transition: Transition.rightToLeft,
+                        duration: const Duration(milliseconds: 150)
+                      );
+                    },
+                    child: const Text(
+                      'See All',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Color.fromARGB(255, 45, 132, 251),
+                      ),
+                    ),
+                  ),
+                HorizintalSpace(1),
               ],
             ),
             VerticallSpace(1),
-            //***********************************************Appointment1**************************************** */
+            //***********************************************Appointment Cards**************************************** */
 
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
                   HorizintalSpace(2),
-                  InkWell(
-                    onTap: () {},
-                    child: Ink.image(
-                      image: const AssetImage('assets/images/Appointment1.png'),
-                      height: 132,
+                  if (isLoading)
+                    const SizedBox(
+                      height: 150, // Match the height of appointment cards
                       width: 218,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  HorizintalSpace(2),
-                  InkWell(
-                    onTap: () {},
-                    child: Ink.image(
-                      image: const AssetImage('assets/images/Appointment1.png'),
-                      height: 132,
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  else if (upcomingAppointments.isEmpty)
+                    Container(
+                      height: 150, // Match the height of appointment cards
                       width: 218,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  HorizintalSpace(2),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'No upcoming appointments',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    ...upcomingAppointments.map((appointment) => 
+                      Padding(
+                        padding: const EdgeInsets.only(right: 16.0),
+                        child: _buildAppointmentCard(appointment),
+                      ),
+                    ).toList(),
                 ],
               ),
             ),
@@ -408,6 +454,116 @@ class HomeContent extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+  
+  Widget _buildAppointmentCard(AppointmentModel appointment) {
+    // Format date for display
+    String formattedDate = '';
+    try {
+      final date = DateFormat('yyyy-MM-dd').parse(appointment.date);
+      formattedDate = DateFormat('EEE, MMM d').format(date);
+    } catch (e) {
+      formattedDate = appointment.date;
+    }
+    
+    return Container(
+      height: 152, // Increased height to accommodate content
+      width: 218,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Background color
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Colors.blue.withOpacity(0.1), Colors.white],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min, // Use minimum space needed
+              children: [
+                Text(
+                  formattedDate,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  appointment.time,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Dr. ${appointment.doctorName}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  appointment.specialty,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 8),
+                // Row(
+                //   children: [
+                //     const Icon(
+                //       Icons.circle,
+                //       color: Colors.green,
+                //       size: 10,
+                //     ),
+                //     const SizedBox(width: 4),
+                //     // Text(
+                //     //   'Confirmed',
+                //     //   style: TextStyle(
+                //     //     color: Colors.grey[600],
+                //     //     fontSize: 12,
+                //     //   ),
+                //     // ),
+                //   ],
+                // ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

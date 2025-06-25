@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:NovaHealth/features/Auth/presentation/forget%20pass/widgets/enter_phone.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body.dart';
+import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,7 @@ import 'package:NovaHealth/features/Auth/presentation/pages/login/widgets/comple
 import 'package:NovaHealth/features/Auth/presentation/pages/sign%20up/widgets/sign_up_view.dart';
 import 'package:NovaHealth/features/on%20Bording/presentation/on_bordin_view.dart';
 import 'package:NovaHealth/utils/api_endpoint.dart';
+import 'package:NovaHealth/services/auth_service.dart';
 
 class LoginViewBody extends StatefulWidget {
   const LoginViewBody({super.key});
@@ -23,8 +25,24 @@ class LoginViewBody extends StatefulWidget {
 class _LoginViewBodyState extends State<LoginViewBody> {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
 
   Future<void> login() async {
+    if (phoneController.text.isEmpty || passwordController.text.isEmpty) {
+      Get.snackbar(
+        "Error", 
+        "Please enter both phone number and password",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+      );
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
     final String url = ApiEndPoints.baseUrl + ApiEndPoints.authEndpoints.login;
     final Map<String, String> headers = {"Content-Type": "application/json"};
     final Map<String, String> body = {
@@ -39,20 +57,64 @@ class _LoginViewBodyState extends State<LoginViewBody> {
         body: jsonEncode(body),
       );
 
+      setState(() {
+        isLoading = false;
+      });
+
       if (response.statusCode == 200) {
-        Get.to(() => HomeViewBody(),
+        final Map<String, dynamic> data = json.decode(response.body);
+        
+        // Store tokens using AuthService
+        await AuthService.saveTokens(data['access'], data['refresh']);
+        
+        // Store user data using AuthService
+        if (data['user'] != null) {
+          await AuthService.saveUserData(data['user']);
+        }
+        
+        Get.offAll(() => HomeViewBody(),
             transition: Transition.rightToLeft,
             duration: Duration(milliseconds: 150));
-      } else { 
-        Get.to(() => HomeViewBody(),
-            transition: Transition.rightToLeft,
-            duration: Duration(milliseconds: 150));
-        // Get.snackbar("Error", "Invalid login credentials",
-        //     snackPosition: SnackPosition.BOTTOM);
+            
+        Get.snackbar(
+          "Success", 
+          "Login successful",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green.withOpacity(0.1),
+          colorText: Colors.green,
+        );
+      } else {
+        // Parse error message if available
+        String errorMessage = "Invalid login credentials";
+        try {
+          final Map<String, dynamic> errorData = json.decode(response.body);
+          if (errorData.containsKey('detail')) {
+            errorMessage = errorData['detail'];
+          }
+        } catch (e) {
+          // Use default error message if parsing fails
+        }
+        
+        Get.snackbar(
+          "Error", 
+          errorMessage,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red.withOpacity(0.1),
+          colorText: Colors.red,
+        );
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to connect to server",
-          snackPosition: SnackPosition.BOTTOM);
+      setState(() {
+        isLoading = false;
+      });
+      
+      Get.snackbar(
+        "Error", 
+        "Failed to connect to server: ${e.toString()}",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red.withOpacity(0.1),
+        colorText: Colors.red,
+      );
     }
   }
 
@@ -140,10 +202,12 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                   SizedBox(
                     width: 350,
                     height: 61,
-                    child: CoustomGeneralButtons(
-                      text: 'Sign in',
-                      onTap: login,
-                    ),
+                    child: isLoading 
+                      ? Center(child: CircularProgressIndicator())
+                      : CoustomGeneralButtons(
+                          text: 'Sign in',
+                          onTap: login,
+                        ),
                   ),
                 ],
               ),

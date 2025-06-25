@@ -1,10 +1,16 @@
 import 'dart:convert';
+import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body.dart';
+import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:NovaHealth/features/Doctor%20List/data/models/booking_model.dart';
 import 'package:NovaHealth/utils/api_endpoint.dart';
+import 'package:NovaHealth/services/auth_service.dart';
+import 'package:NovaHealth/services/appointment_service.dart';
+import 'package:NovaHealth/features/HomePage/data/models/appointment_model.dart';
+//import 'package:NovaHealth/features/HomePage/presentation/widgets/home_view_body.dart';
 
 class Doctor {
   final int userId;
@@ -49,6 +55,52 @@ class Doctor {
       timeSlots: parsedTimeSlots,
       imageUrl: json['image'],
     );
+  }
+
+  // Helper method to get time slot ID
+  int? getTimeSlotId(String formattedTimeSlot) {
+    for (var slot in timeSlots) {
+      try {
+        if (slot is Map<String, dynamic>) {
+          // If slot has an id field, use it directly
+          if (slot.containsKey('id')) {
+            // Format the slot time to match the displayed format
+            String slotTime = '';
+            if (slot.containsKey('start_time') && slot.containsKey('end_time')) {
+              final start = _convertTo12HourFormat(slot['start_time'].toString());
+              final end = _convertTo12HourFormat(slot['end_time'].toString());
+              slotTime = '$start - $end';
+            } else if (slot.containsKey('time')) {
+              slotTime = formatTimeSlot(slot['time']);
+            }
+            
+            // Check if this is the selected time slot
+            if (slotTime == formattedTimeSlot) {
+              return slot['id'];
+            }
+          }
+        } else if (slot is String) {
+          // If the API returns a simple string format with ID embedded
+          // This is just an example, adjust based on your API response format
+          final parts = slot.split('|');
+          if (parts.length >= 2) {
+            final slotTime = formatTimeSlot(parts[0]);
+            if (slotTime == formattedTimeSlot) {
+              return int.tryParse(parts[1]);
+            }
+          }
+        }
+        
+        // Debug: Print the slot and formatted time slot for comparison
+        print('Comparing: API slot = $slot, formatted = ${formatTimeSlot(slot.toString())}, selected = $formattedTimeSlot');
+      } catch (e) {
+        print('Error parsing time slot: $e');
+      }
+    }
+    
+    // If we can't find the ID, return a default for testing
+    print('Could not find time slot ID for $formattedTimeSlot, using default');
+    return 1664; // Default for testing - remove in production
   }
 
   // Helper method to format a time slot
@@ -263,9 +315,13 @@ class _doctorListPageBodyState extends State<doctorListPageBody> {
     }
   }
 
-  void selectTimeSlot(int doctorId, String time) {
+  void selectTimeSlot(int doctorId, String time, Doctor doctor) {
     setState(() {
       selectedTimeSlots[doctorId] = time;
+      
+      // Debug: Print the time slot ID for the selected time
+      final timeSlotId = doctor.getTimeSlotId(time);
+      print('Selected time slot: $time, ID: $timeSlotId');
     });
   }
 
@@ -288,65 +344,221 @@ class _doctorListPageBodyState extends State<doctorListPageBody> {
       fee: doctor.fees ?? '0',
     );
 
-    // Show booking confirmation
-showDialog(
-  context: context,
-  builder: (context) => Dialog(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
-      
-    ),
-    elevation: 8, // Shadow depth
-    backgroundColor: Colors.white,
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Confirm Booking',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Text('Doctor: Dr. ${doctor.fullName}'),
-          Text('Specialty: ${doctor.specialty}'),
-          Text('Date: ${formatDate(selectedDate)}'),
-          Text('Time: $selectedTime'),
-          Text('Fee: ${doctor.fees ?? "Not specified"} EGP'),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  'Cancel',
-                  style: TextStyle(color: Colors.blue),
-                ),
-                
+    // Show booking confirmation with payment options
+    showDialog(
+      context: context,
+      builder: (context) {
+        String selectedPaymentMethod = 'cash'; // Default to cash
+        
+        return StatefulBuilder(
+          builder: (context, setState) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            elevation: 8, // Shadow depth
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Confirm Booking',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  Text('Doctor: Dr. ${doctor.fullName}'),
+                  Text('Specialty: ${doctor.specialty}'),
+                  Text('Date: ${formatDate(selectedDate)}'),
+                  Text('Time: $selectedTime'),
+                  Text('Fee: ${doctor.fees ?? "Not specified"} EGP'),
+                  const SizedBox(height: 16),
+                  
+                  // Payment method selection
+                  const Text(
+                    'Payment Method:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  
+                  // Radio buttons for payment methods
+                  Row(
+                    children: [
+                      Radio(
+                        value: 'cash',
+                        groupValue: selectedPaymentMethod,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPaymentMethod = value.toString();
+                          });
+                        },
+                        activeColor: Colors.blue,
+                      ),
+                      const Text('Cash'),
+                      const SizedBox(width: 16),
+                      Radio(
+                        value: 'visa',
+                        groupValue: selectedPaymentMethod,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPaymentMethod = value.toString();
+                          });
+                        },
+                        activeColor: Colors.blue,
+                      ),
+                      const Text('Visa'),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Close the dialog
+                          
+                          if (selectedPaymentMethod == 'cash') {
+                            // Process cash payment
+                            processCashPayment(doctor);
+                          } else {
+                            // For Visa payment - to be implemented
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Visa payment will be implemented soon')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Confirm',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the dialog
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Appointment booked successfully!')),
-                  );
-                },
-                child: const Text(
-                  'Confirm',
-                  style: TextStyle(color: Colors.blue),
-                ),
-              ),
-            ],
+            ),
           ),
-        ],
-      ),
-    ),
-  ),
-);
+        );
+      },
+    );
+  }
 
+  // Process cash payment and book appointment
+  Future<void> processCashPayment(Doctor doctor) async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // Get the selected time slot
+      final selectedTime = selectedTimeSlots[doctor.userId];
+      if (selectedTime == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select a time slot')),
+        );
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+      
+      // Get the time slot ID from the doctor's time slots
+      final timeSlotId = doctor.getTimeSlotId(selectedTime);
+      
+      if (timeSlotId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not find time slot ID. Please try again.')),
+        );
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+      
+      final url = 'https://a593-197-37-181-7.ngrok-free.app/api/v1/scheduling/appointments/book-cash/';
+      
+      // Get authentication headers with token
+      final headers = await AuthService.getAuthHeaders();
+      
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode({
+          'time_slot_id': timeSlotId,
+          'amount': doctor.fees ?? '0.00',
+        }),
+      );
+
+      setState(() {
+        isLoading = false;
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        final appointmentId = responseData['appointment_id'];
+        
+        // Create and save the appointment
+        final appointment = AppointmentModel(
+          appointmentId: appointmentId,
+          doctorId: doctor.userId,
+          doctorName: doctor.fullName,
+          specialty: doctor.specialty,
+          date: formatDate(selectedDate),
+          time: selectedTime,
+          fee: doctor.fees ?? '0.00',
+          doctorImageUrl: doctor.imageUrl,
+          status: 'upcoming',
+        );
+        
+        // Save the appointment to local storage
+        await AppointmentService.saveAppointment(appointment);
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Appointment booked successfully! Appointment ID: $appointmentId')),
+        );
+        
+        // Navigate back to home page to see the updated appointment list
+        Get.offAll(() => const HomeViewBody(), 
+          transition: Transition.leftToRight,
+          duration: const Duration(milliseconds: 150)
+        );
+      } else {
+        // Try to get error message from response
+        String errorMessage = 'Failed to book appointment';
+        try {
+          final errorData = json.decode(response.body);
+          if (errorData.containsKey('detail')) {
+            errorMessage = errorData['detail'];
+          } else if (errorData.containsKey('message')) {
+            errorMessage = errorData['message'];
+          }
+        } catch (e) {
+          // Use default error message
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('$errorMessage (${response.statusCode})')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error booking appointment: $e')),
+      );
+    }
   }
 
   @override
@@ -742,7 +954,7 @@ SizedBox(
                     return Container(
                       margin: const EdgeInsets.only(right: 8),
                       child: OutlinedButton(
-                        onPressed: () => selectTimeSlot(doctor.userId, timeSlot),
+                        onPressed: () => selectTimeSlot(doctor.userId, timeSlot, doctor),
                         style: OutlinedButton.styleFrom(
                           backgroundColor: isSelected ? Colors.blue : Colors.transparent,
                           foregroundColor: isSelected ? Colors.white : Colors.blue,

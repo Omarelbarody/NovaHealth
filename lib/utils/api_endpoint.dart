@@ -1,32 +1,32 @@
 class ApiEndPoints {
   static const String baseUrl = 'https://a593-197-37-181-7.ngrok-free.app/api/v1/';
-  static _AuthEndPoints authEndpoints = _AuthEndPoints();
-  static _ProfileEndPoints profileEndpoints = _ProfileEndPoints();
-  static _PrescriptionEndPoints prescriptionEndpoints = _PrescriptionEndPoints();
-  static _DoctorEndPoints doctorEndpoints = _DoctorEndPoints();
+
+  static AuthEndPoints authEndpoints = AuthEndPoints();
+  static DoctorEndPoints doctorEndpoints = DoctorEndPoints();
+  static ProfileEndPoints profileEndpoints = ProfileEndPoints();
+  static PrescriptionEndPoints prescriptionEndpoints = PrescriptionEndPoints();
 }
 
-class _AuthEndPoints {
+class AuthEndPoints {
   final String login = 'auth/login/';
-  final String signup = 'auth/signup/';
+  final String register = 'auth/signup/';
+  final String verifyOtp = 'auth/verify-otp/';
+  final String resetPassword = 'auth/reset-password/';
+  final String sendOtp = 'auth/send-otp/';
+  final String signup = 'auth/register/';
 }
 
-class _ProfileEndPoints {
-  final String doctors = 'profiles/doctors/';
+class DoctorEndPoints {
+  String doctorsBySpecialty(String specialty, String date) {
+    return 'profiles/doctors/?specialty=$specialty&date=$date';
+  }
+}
+
+class ProfileEndPoints {
   final String patients = 'profiles/patients/';
+  final String doctors = 'profiles/doctors/';
 }
 
-class _PrescriptionEndPoints {
+class PrescriptionEndPoints {
   final String prescriptions = 'prescriptions/';
 }
-
-class _DoctorEndPoints {
-  String doctorsBySpecialty(String specialty, String date) => 
-      'profiles/doctors/?specialty=$specialty&date=$date';
-}
-
-// ChatGPT API constants
-// class ChatGptConstants {
-//   static const String apiKey = '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';
-//   static const String apiUrl = "https://openrouter.ai/api/v1";
-// }

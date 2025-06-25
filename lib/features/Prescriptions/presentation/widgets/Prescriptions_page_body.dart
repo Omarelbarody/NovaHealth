@@ -49,7 +49,7 @@ class _PrescriptionsPageBodyState extends State<PrescriptionsPageBody> {
   Future<void> _fetchPrescriptions() async {
     try {
       final response = await http.get(
-        Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.prescriptionEndpoints.prescriptions + '8/'),
+        Uri.parse(ApiEndPoints.baseUrl + ApiEndPoints.prescriptionEndpoints.prescriptions + '4/'),
         headers: {
           'Content-Type': 'application/json',
         },
