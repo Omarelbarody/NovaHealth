@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../data/services/chat_gpt_service.dart';
+import '../widgets/formatted_text.dart';
 
 class ChatbotPageBody extends StatefulWidget {
   const ChatbotPageBody({super.key});
@@ -348,12 +349,19 @@ class ChatMessage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Text(
-                text,
-                style: TextStyle(
-                  color: isUser ? Colors.white : Colors.black,
-                ),
-              ),
+              child: isUser 
+                ? Text(
+                    text,
+                    style: TextStyle(
+                      color: isUser ? Colors.white : Colors.black,
+                    ),
+                  )
+                : FormattedText(
+                    text: text,
+                    style: const TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
             ),
           ),
           if (isUser)

@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 
 class ChatGptService {
-  static const String _apiKey = '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';
+  static const String _apiKey = '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';
   static const String _apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
 
   Future<String> getMedicineInfo(String medicineName) async {
@@ -21,15 +22,15 @@ class ChatGptService {
             {
               'role': 'system',
               'content':
-                  'You are a medical assistant. Provide information about medicines in a clear, concise format. Include benefits and side effects. Always reply in the same language as the user\'s question.',
+                  'You are a medical assistant. Provide information about medicines in a clear, concise format. Include benefits and side effects. Always reply in the same language as the user\'s question. You can use formatting: use *text* for italic and **text** for bold to emphasize important information.',
             },
             {
               'role': 'user',
               'content': 'What are the benefits and side effects of $medicineName?',
             },
           ],
-          'temperature': 0.7,
-          'max_tokens': 500,
+          'temperature': 0.2,
+          'max_tokens': 2048,
         }),
       );
 
@@ -38,7 +39,8 @@ class ChatGptService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return data['choices'][0]['message']['content'];
+        String content = data['choices'][0]['message']['content'];
+        return formatResponse(content);
       } else {
         return 'API Error: ${response.statusCode}\n${response.body}';
       }
@@ -47,5 +49,18 @@ class ChatGptService {
       print('Stack trace: $stack');
       return 'Sorry, I encountered an error while fetching information about $medicineName. Please try again later.';
     }
+  }
+
+  // Format the response to handle bold and italic markdown
+  String formatResponse(String text) {
+    // Replace **text** with bold formatting
+    final boldPattern = RegExp(r'\*\*(.*?)\*\*');
+    text = text.replaceAllMapped(boldPattern, (match) => '<b>${match.group(1)}</b>');
+    
+    // Replace *text* with italic formatting
+    final italicPattern = RegExp(r'\*(.*?)\*');
+    text = text.replaceAllMapped(italicPattern, (match) => '<i>${match.group(1)}</i>');
+    
+    return text;
   }
 }
