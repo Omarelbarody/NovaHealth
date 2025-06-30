@@ -335,14 +335,6 @@ class _doctorListPageBodyState extends State<doctorListPageBody> {
       return;
     }
 
-    final booking = BookingModel(
-      doctorId: doctor.userId,
-      doctorName: doctor.fullName,
-      specialty: doctor.specialty,
-      date: formatDate(selectedDate),
-      time: selectedTime,
-      fee: doctor.fees ?? '0',
-    );
 
     // Show booking confirmation with payment options
     showDialog(
@@ -485,7 +477,7 @@ class _doctorListPageBodyState extends State<doctorListPageBody> {
         return;
       }
       
-      final url = 'https://a593-197-37-181-7.ngrok-free.app/api/v1/scheduling/appointments/book-cash/';
+      final url = 'http://localhost:8000/api/v1/scheduling/appointments/book-cash/';
       
       // Get authentication headers with token
       final headers = await AuthService.getAuthHeaders();
