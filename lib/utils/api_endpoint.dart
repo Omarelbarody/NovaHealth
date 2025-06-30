@@ -1,5 +1,6 @@
 class ApiEndPoints {
-  static const String baseUrl = 'https://a593-197-37-181-7.ngrok-free.app/api/v1/';
+  static const String proxy = 'a593-197-37-181-7.ngrok-free.app';
+  static const String baseUrl = 'http://localhost:8000/api/v1/';
 
   static AuthEndPoints authEndpoints = AuthEndPoints();
   static DoctorEndPoints doctorEndpoints = DoctorEndPoints();

@@ -8,6 +8,7 @@ import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_body
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/Labs/presentation/widgets/labs_page_view.dart';
 import 'package:NovaHealth/features/Prescriptions/presentation/widgets/Prescriptions_page_view.dart';
+import 'package:NovaHealth/features/Privacy%20Policy/presentation/widgets/privacy_policy_page_view.dart';
 import 'package:NovaHealth/features/Profile%20Data/presentation/widgets/profile_data_view.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
@@ -282,6 +283,9 @@ class _ProfileMenuButton extends StatelessWidget {
         }
               if (label == 'Radology') {
           Get.to(() => const RadologysPageView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
+        }
+              if (label == 'Privacy Policy') {
+          Get.to(() => const PrivacyPageView(), transition: Transition.rightToLeft, duration: const Duration(milliseconds: 200));
         }
       },
       child: Row(
