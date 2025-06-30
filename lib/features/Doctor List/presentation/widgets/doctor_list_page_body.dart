@@ -523,9 +523,9 @@ class _doctorListPageBodyState extends State<doctorListPageBody> {
         // Save the appointment to local storage
         await AppointmentService.saveAppointment(appointment);
         
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Appointment booked successfully! Appointment ID: $appointmentId')),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(content: Text('Appointment booked successfully! Appointment ID: $appointmentId')),
+        // );
         
         // Navigate back to home page to see the updated appointment list
         Get.offAll(() => const HomeViewBody(), 
