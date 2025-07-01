@@ -6,6 +6,7 @@ class ApiEndPoints {
   static DoctorEndPoints doctorEndpoints = DoctorEndPoints();
   static ProfileEndPoints profileEndpoints = ProfileEndPoints();
   static PrescriptionEndPoints prescriptionEndpoints = PrescriptionEndPoints();
+  static SchedulingEndPoints schedulingEndpoints = SchedulingEndPoints();
 }
 
 class AuthEndPoints {
@@ -30,4 +31,14 @@ class ProfileEndPoints {
 
 class PrescriptionEndPoints {
   final String prescriptions = 'prescriptions/';
+}
+
+class SchedulingEndPoints {
+  String queueStatus(int appointmentId) {
+    return 'scheduling/appointments/$appointmentId/queue-status';
+  }
+  
+  String cancelAppointment(int appointmentId) {
+    return 'scheduling/appointments/$appointmentId/cancel/';
+  }
 }

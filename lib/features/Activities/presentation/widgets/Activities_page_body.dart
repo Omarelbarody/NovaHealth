@@ -6,6 +6,9 @@ import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_body.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/activities_page_view.dart';
+import 'package:NovaHealth/features/HomePage/data/models/appointment_model.dart';
+import 'package:NovaHealth/features/Activities/data/models/queue_status_model.dart';
+import 'package:NovaHealth/services/appointment_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
@@ -116,15 +119,138 @@ void _onItemTapped(int index) {
   }
 }
 
-class ActivitiesContent extends StatelessWidget {
+class ActivitiesContent extends StatefulWidget {
   const ActivitiesContent({super.key});
+
+  @override
+  State<ActivitiesContent> createState() => _ActivitiesContentState();
+}
+
+class _ActivitiesContentState extends State<ActivitiesContent> {
+  List<AppointmentModel> _appointments = [];
+  Map<int, QueueStatusModel> _queueStatuses = {};
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
+  }
+
+  Future<void> _loadAppointments() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final appointments = await AppointmentService.getUpcomingAppointments();
+      setState(() {
+        _appointments = appointments;
+      });
+      
+      // Load queue status for each appointment
+      for (var appointment in appointments) {
+        _fetchQueueStatus(appointment.appointmentId);
+      }
+    } catch (e) {
+      _showErrorSnackbar('Failed to load appointments');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchQueueStatus(int appointmentId) async {
+    try {
+      final queueStatusData = await AppointmentService.getQueueStatus(appointmentId);
+      final queueStatus = QueueStatusModel.fromJson(queueStatusData);
+      
+      setState(() {
+        _queueStatuses[appointmentId] = queueStatus;
+      });
+      
+      // Check if it's user's turn
+      if (queueStatus.yourTurnNumber == queueStatus.currentTurn) {
+        _showTurnNotification(appointmentId);
+      }
+    } catch (e) {
+      print('Error fetching queue status: $e');
+    }
+  }
+
+  void _showTurnNotification(int appointmentId) {
+    final appointment = _appointments.firstWhere(
+      (a) => a.appointmentId == appointmentId,
+      orElse: () => AppointmentModel(
+        appointmentId: 0,
+        doctorId: 0,
+        doctorName: 'Unknown',
+        specialty: 'Unknown',
+        date: '',
+        time: '',
+        fee: '',
+      ),
+    );
+    
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text('It\'s Your Turn!'),
+        content: Text('Your appointment with Dr. ${appointment.doctorName} is ready now.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _cancelAppointment(appointmentId);
+            },
+            child: Text('Cancel Appointment', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _cancelAppointment(int appointmentId) async {
+    try {
+      await AppointmentService.cancelAppointment(appointmentId);
+      _showSuccessSnackbar('Appointment cancelled successfully');
+      _loadAppointments(); // Refresh the list
+    } catch (e) {
+      _showErrorSnackbar('Failed to cancel appointment');
+    }
+  }
+
+  void _showSuccessSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      reverse: true,
       child: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -139,8 +265,164 @@ class ActivitiesContent extends StatelessWidget {
               ],
             ),
             VerticallSpace(2),
+            Text(
+              'Your Appointments',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            VerticallSpace(2),
+            _isLoading
+                ? Center(child: CircularProgressIndicator())
+                : _appointments.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No upcoming appointments',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: _appointments.length,
+                        itemBuilder: (context, index) {
+                          final appointment = _appointments[index];
+                          final queueStatus = _queueStatuses[appointment.appointmentId];
+                          
+                          return Card(
+                            elevation: 4,
+                            margin: EdgeInsets.only(bottom: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage: appointment.doctorImageUrl != null
+                                            ? NetworkImage(appointment.doctorImageUrl!)
+                                            : AssetImage('assets/images/ProfilePhoto.png') as ImageProvider,
+                                        radius: 30,
+                                      ),
+                                      SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Dr. ${appointment.doctorName}',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Text(
+                                              appointment.specialty,
+                                              style: TextStyle(
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              '${appointment.date} | ${appointment.time}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(height: 24),
+                                  if (queueStatus != null) ...[
+                                    _buildQueueInfo(queueStatus),
+                                    SizedBox(height: 16),
+                                  ],
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () => _cancelAppointment(appointment.appointmentId),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: Text('Cancel Appointment'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildQueueInfo(QueueStatusModel queueStatus) {
+    final isYourTurn = queueStatus.yourTurnNumber == queueStatus.currentTurn;
+    final statusColor = isYourTurn ? Colors.green : Colors.blue;
+    
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: statusColor.withOpacity(0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            isYourTurn ? 'It\'s Your Turn Now!' : 'Queue Status',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: statusColor,
+            ),
+          ),
+          SizedBox(height: 8),
+          _buildQueueInfoRow('Your Turn Number', '${queueStatus.yourTurnNumber}'),
+          _buildQueueInfoRow('Current Turn', '${queueStatus.currentTurn}'),
+          _buildQueueInfoRow('Patients Before You', '${queueStatus.patientsBeforeYou}'),
+          _buildQueueInfoRow('Status', queueStatus.status.toUpperCase()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQueueInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

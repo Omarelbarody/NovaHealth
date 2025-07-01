@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:NovaHealth/features/HomePage/data/models/appointment_model.dart';
+import 'package:NovaHealth/utils/api_endpoint.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'auth_service.dart';
 
 class AppointmentService {
   static const String _appointmentsKey = 'user_appointments';
@@ -80,5 +83,43 @@ class AppointmentService {
     
     // Save back to SharedPreferences
     await prefs.setStringList(_appointmentsKey, updatedAppointments);
+  }
+  
+  // Get queue status for an appointment
+  static Future<Map<String, dynamic>> getQueueStatus(int appointmentId) async {
+    final headers = await AuthService.getAuthHeaders();
+    final url = Uri.parse('${ApiEndPoints.baseUrl}${ApiEndPoints.schedulingEndpoints.queueStatus(appointmentId)}');
+    
+    try {
+      final response = await http.get(url, headers: headers);
+      
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to get queue status: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error getting queue status: $e');
+    }
+  }
+  
+  // Cancel appointment
+  static Future<Map<String, dynamic>> cancelAppointment(int appointmentId) async {
+    final headers = await AuthService.getAuthHeaders();
+    final url = Uri.parse('${ApiEndPoints.baseUrl}${ApiEndPoints.schedulingEndpoints.cancelAppointment(appointmentId)}');
+    
+    try {
+      final response = await http.post(url, headers: headers);
+      
+      if (response.statusCode == 200) {
+        // Delete from local storage
+        await deleteAppointment(appointmentId);
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to cancel appointment: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error cancelling appointment: $e');
+    }
   }
 } 
