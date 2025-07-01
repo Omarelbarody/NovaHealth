@@ -925,7 +925,7 @@ SizedBox(
                 ),
                 // Doctor image
                 CircleAvatar(
-                  radius: 30,
+                  radius: 35,
                    backgroundImage: NetworkImage(doctor.imageUrl),
                 ),
               ],
