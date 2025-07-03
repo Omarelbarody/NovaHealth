@@ -7,6 +7,7 @@ import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_
 import 'package:NovaHealth/features/Consultaion/presentation/widgets/department_page_view.dart';
 import 'package:NovaHealth/features/HomePage/presentation/widgets/home_page_view.dart';
 import 'package:NovaHealth/features/MedicaNews/presentation/widgets/medical_news_view.dart';
+import 'package:NovaHealth/features/Nova%20Ai/presentation/widgets/nova_ai_page_view.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_body.dart';
 import 'package:NovaHealth/features/ProfilePage/Presentation/widgets/profile_page_view.dart';
 import 'package:NovaHealth/features/Activities/presentation/widgets/Activities_page_view.dart';
@@ -313,7 +314,11 @@ class _HomeContentState extends State<HomeContent> {
               Row(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Get.to(() => NovaAiPageView(),
+                          transition: Transition.rightToLeft,
+                          duration: const Duration(milliseconds: 150));
+                    },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Stack(
